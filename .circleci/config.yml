@@ -4,15 +4,29 @@ jobs:
     build:
         docker:
             - image: fpco/stack-build:lts
+
         steps:
-          - checkout
-          - run:
-              name: Install dependencies
-              command: stack setup
-          - run:
-              name: Run tests
-              command: stack test
-          - run:
-              name: Lint
-              command: curl -sSL https://raw.github.com/ndmitchell/hlint/master/misc/travis.sh | sh -s src app
+            - checkout
+
+            - restore_cache:
+                name: Restore cached dependencies
+                keys:
+                    - adjust-{{ checksum "adjust.cabal" }}
+
+            - run:
+                name: Install dependencies
+                command: stack setup
+
+            - run:
+                name: Run tests
+                command: stack test
+
+            - run:
+                name: Lint
+                command: curl -sSL https://raw.github.com/ndmitchell/hlint/master/misc/travis.sh | sh -s src app
+
+            - save_cache:
+                name: Cache dependencies
+                key: adjust-{{ checksum "adjust.cabal" }}
+                paths: ".stack-work"
 
