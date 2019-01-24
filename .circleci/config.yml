@@ -1,0 +1,18 @@
+
+version: 2
+jobs:
+    build:
+        docker:
+            - image: fpco/stack-build:lts
+        steps:
+          - checkout
+          - run:
+              name: Install dependencies
+              command: stack setup
+          - run:
+              name: Run tests
+              command: stack test
+          - run:
+              name: Lint
+              command: curl -sSL https://raw.github.com/ndmitchell/hlint/master/misc/travis.sh | sh -s src app
+
