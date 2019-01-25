@@ -32,10 +32,10 @@ data Options = Options {
     adjust :: Bool
     -- Control the FWER/FDR at the given alpha 
   , alpha :: Double
-    -- Control the FWER using a Bonferroni correction
-  , bonferroni :: Bool
     -- Control the FDR using the Benjamini-Hochberg procedure
   , fdr :: Bool
+    -- Control the FWER using the Bonferroni correction
+  , fwer :: Bool
     -- Delimiter to use when parsing the statistics file
   , delim :: String
     -- Column containing the p-value
@@ -61,8 +61,8 @@ txtAdjust = "Convert and replace p-values with adjusted p-values"
 txtAlpha :: String
 txtAlpha = "Control the FWER/FDR at the given alpha (default = 0.05)"
 
-txtBonferroni :: String
-txtBonferroni = "Control the FWER using the Bonferroni correction"
+txtFwer :: String
+txtFwer = "Control the FWER using the Bonferroni correction"
 
 txtFdr :: String
 txtFdr = "Control the FDR using the Benjamini-Hochberg procedure (default)"
@@ -95,9 +95,9 @@ options = Options {
                  groupname "Correction options" &= help txtAdjust
   , alpha      = 0.05 &= explicit &= name "a" &= name "alpha" &= 
                  groupname "Correction options" &= opt (0.05 :: Double) &= help txtAlpha
-  , bonferroni = False &= explicit &= name "b" &= name "bonferroni" &= 
-                 groupname "Correction options" &= help txtBonferroni
-  , fdr        = False &= explicit &= name "f" &= name "fdr" &= 
+  , fwer       = False &= explicit &= name "fwer" &= 
+                 groupname "Correction options" &= help txtFwer
+  , fdr        = False &= explicit &= name "fdr" &= 
                  groupname "Correction options" &= help txtFdr
   , column     = def &= explicit &= name "c" &= name "column" &= 
                  groupname "Processing options" &= help txtColumn
@@ -144,13 +144,13 @@ checkOptions opts@Options{..}  = do
         putStrLn "ERROR: You must provide an output file" >>
         exitWith (ExitFailure 1)
 
-    when (bonferroni && fdr) $
-        putStrLn "ERROR: You can only use on of: --bonferroni, --fdr" >>
+    when (fwer && fdr) $
+        putStrLn "ERROR: You can only use on of: --fwer, --fdr" >>
         exitWith (ExitFailure 1)
 
     return opts { 
         delim = if null delim then "\t" else delim
-      , fdr   = fdr || not bonferroni 
+      , fdr   = fdr || not fwer 
     }
 
 handleCmdLineArgs = do

@@ -78,7 +78,7 @@ adjustFDR dex alpha r vs = updateOriginals $
         updatePValues pv = foldl' (\ac (i, (p, bv)) -> (control p i, bv) : ac) [] $ 
                            zip [1..] pv
         updateOriginals = V.map (\(p, bv) -> bv // [(dex, BS.pack $ show p)])
-        control p k = p * fromIntegral size / fromIntegral k
+        control p k = min 1.0 (p * fromIntegral size / fromIntegral k)
 
 -- | Controls the FWER at level alpha using the Bonferroni correction.
 --

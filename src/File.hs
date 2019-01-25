@@ -1,8 +1,6 @@
 
 -- | file: File.hs
 -- | desc: File reading, parsing, and writing functions.
--- | vers: 0.1.0
--- | auth: TR
 
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE Strict #-}

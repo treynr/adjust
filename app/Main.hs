@@ -30,10 +30,10 @@ main = exec =<< handleCmdLineArgs
 controlErrors :: Options -> Int -> DSVFile -> DSVFile
 --
 controlErrors Options{..} dex df
-    | fdr && adjust        = (\(h, rv) -> (h, adjustFDR dex alpha remove rv)) df
-    | fdr                  = (\(h, rv) -> (h, controlFDR dex alpha rv)) df
-    | bonferroni && adjust = (\(h, rv) -> (h, adjustFWER dex alpha remove rv)) df
-    | bonferroni           = (\(h, rv) -> (h, controlFWER dex alpha rv)) df
+    | fdr && adjust  = (\(h, rv) -> (h, adjustFDR dex alpha remove rv)) df
+    | fdr            = (\(h, rv) -> (h, controlFDR dex alpha rv)) df
+    | fwer && adjust = (\(h, rv) -> (h, adjustFWER dex alpha remove rv)) df
+    | fwer           = (\(h, rv) -> (h, controlFWER dex alpha rv)) df
 
 handlePColumn :: Int -> Int
 --
