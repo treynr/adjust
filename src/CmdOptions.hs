@@ -15,8 +15,8 @@ module CmdOptions (
 
 import Control.Monad          (when)
 import System.Console.CmdArgs ( Data, Typeable, (&=), args, cmdArgs, def
-                              , explicit, help, helpArg, isLoud, name, opt, program
-                              , summary, typ, verbosity, versionArg
+                              , explicit, groupname, help, helpArg, isLoud, name, opt
+                              , program, summary, typ, verbosity, versionArg
                               )
 import System.Environment     (getArgs, withArgs)
 import System.Exit            (ExitCode(ExitFailure), exitWith)
@@ -56,7 +56,7 @@ data Options = Options {
 -- | Text to display when viewing program options
 --
 txtAdjust :: String
-txtAdjust = "Convert p-values to adjusted p-values, aka q-values"
+txtAdjust = "Convert and replace p-values with adjusted p-values"
 
 txtAlpha :: String
 txtAlpha = "Control the FWER/FDR at the given alpha (default = 0.05)"
@@ -74,7 +74,7 @@ txtDelim :: String
 txtDelim = "Delimiter to use when parsing the input statistics file (default = tab)"
 
 txtNoHeader :: String
-txtNoHeader = "Input data file doesn't contain a header row (currently disable)"
+txtNoHeader = "Input data file doesn't contain a header row (currently disabled)"
 
 txtRemove :: String
 txtRemove = "Remove rows above the given alpha threshold (useful for large datasets)"
@@ -91,18 +91,26 @@ options :: Options
 --
 options = Options {
 
-    adjust     = False &= explicit &= name "adjust" &= help txtAdjust
+    adjust     = False &= explicit &= name "adjust" &= 
+                 groupname "Correction options" &= help txtAdjust
   , alpha      = 0.05 &= explicit &= name "a" &= name "alpha" &= 
-                 opt (0.05 :: Double) &= help txtAlpha
+                 groupname "Correction options" &= opt (0.05 :: Double) &= help txtAlpha
   , bonferroni = False &= explicit &= name "b" &= name "bonferroni" &= 
-                 help txtBonferroni
-  , fdr        = False &= explicit &= name "f" &= name "fdr" &= help txtFdr
-  , column     = def &= explicit &= name "c" &= name "column" &= help txtColumn
-  , delim      = def &= explicit &= name "d" &= name "delim" &= help txtDelim
-  , noHeader   = def &= explicit &= name "no-header" &= help txtNoHeader
-  , remove     = False &= explicit &= name "r" &= name "remove" &= help txtRemove
-  , stdIn      = False &= explicit &= name "i" &= name "stdin" &= help txtStdin
-  , stdOut     = False &= explicit &= name "o" &= name "stdout" &= help txtStdout
+                 groupname "Correction options" &= help txtBonferroni
+  , fdr        = False &= explicit &= name "f" &= name "fdr" &= 
+                 groupname "Correction options" &= help txtFdr
+  , column     = def &= explicit &= name "c" &= name "column" &= 
+                 groupname "Processing options" &= help txtColumn
+  , delim      = def &= explicit &= name "d" &= name "delim" &= 
+                 groupname "Processing options" &= help txtDelim
+  , noHeader   = def &= explicit &= name "no-header" &= 
+                 groupname "Processing options" &= help txtNoHeader
+  , remove     = False &= explicit &= name "r" &= name "remove" &= 
+                 groupname "Processing options" &= help txtRemove
+  , stdIn      = False &= explicit &= name "i" &= name "stdin" &= 
+                 groupname "I/O options" &= help txtStdin
+  , stdOut     = False &= explicit &= name "o" &= name "stdout" &= 
+                 groupname "I/O options" &= help txtStdout
   , argList    = def &= args &= typ "<input-file> <output-file>"
 }
 
@@ -110,11 +118,11 @@ getOptions :: IO Options
 --
 getOptions = cmdArgs $ options
     -- &= verbosityArgs [explicit, name "verbose", name "v"] []
-    &= verbosity
-    &= versionArg [explicit, name "version", summary _INFO]
+    -- &= verbosity
+    &= versionArg [explicit, name "version", summary _INFO, groupname "Misc. options"]
     &= summary (_INFO ++ "\n" ++ _DESC)
     &= help ""
-    &= helpArg [explicit, name "help", name "h"]
+    &= helpArg [explicit, name "help", name "h", groupname "Misc. options"]
     &= program _EXEC
 
 -- | Checks to ensure certain user-supplied options and cmd line arguments are set. 

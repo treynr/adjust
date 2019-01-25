@@ -16,7 +16,9 @@ import System.IO     (IOMode(ReadMode, WriteMode), stdin, stdout, withFile)
 import CmdOptions    (Options(..), handleCmdLineArgs)
 import Fdr           (adjustFDR, controlFDR, adjustFWER, controlFWER)
 import File.Internal (DSVFile)
-import File          (findPColumn, readStatisticsFile', writeStatisticsFile')
+import File          ( findPColumn, readStatisticsFile, readStatisticsFile'
+                     , writeStatisticsFile'
+                     )
 
 main :: IO ()
 --
@@ -45,10 +47,8 @@ handleInput :: Options -> IO DSVFile
 --
 handleInput Options{..}
     | stdIn     = eitherError <$> readStatisticsFile' (head delim) stdin
-    -- | otherwise = withFile (argList !! 0) ReadMode $ \handle ->
-    --     eitherError <$> readStatisticsFile' (head delim) handle
-    | otherwise = withFile (argList !! 0) ReadMode $
-                  fmap eitherError . readStatisticsFile' (head delim)
+    | otherwise = eitherError <$> readStatisticsFile (head delim) (argList !! 0)
+        
     where
         -- | Returns an error if the file couldn't be parsed otherwise removes the Either
         -- | type from the DSVFile. Error is bad but it's easy.
@@ -62,6 +62,7 @@ handleOutput :: Options -> DSVFile -> IO ()
 --
 handleOutput Options{..} dsv
     | stdIn && stdOut     = writeStatisticsFile' (head delim) stdout dsv
+    | not stdIn && stdOut = writeStatisticsFile' (head delim) stdout dsv
     | stdIn && not stdOut = withFile (argList !! 0) WriteMode $ \handle ->
         writeStatisticsFile' (head delim) handle dsv
     | otherwise           = withFile (argList !! 1) WriteMode $ \handle ->
