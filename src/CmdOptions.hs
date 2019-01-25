@@ -125,10 +125,6 @@ checkOptions opts@Options{..}  = do
         putStrLn "You must provide at least an input file" >>
         exitWith (ExitFailure 1)
 
-    when (alpha > 0.0 && adjust) $
-        putStrLn "You can only use on of: --alpha, --adjust" >>
-        exitWith (ExitFailure 1)
-
     when (bonferroni && fdr) $
         putStrLn "You can only use on of: --bonferroni, --fdr" >>
         exitWith (ExitFailure 1)

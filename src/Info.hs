@@ -30,7 +30,7 @@ _EXEC :: String
 _EXEC = "adjust"
 
 _HASH :: String
-_HASH = if $(gitHash) == "UNKNOWN" then "" else '-' : $(gitHash)
+_HASH = if $(gitHash) == "UNKNOWN" then "" else '-' : (take 8 $(gitHash))
 
 _INFO :: String
 _INFO = _EXEC ++ " v. " ++ _VERS ++ _HASH

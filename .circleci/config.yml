@@ -15,7 +15,9 @@ jobs:
 
             - run:
                 name: Install dependencies
-                command: stack setup
+                command: |
+                    stack setup
+                    stack install --only-dependencies
 
             - run:
                 name: Run tests
