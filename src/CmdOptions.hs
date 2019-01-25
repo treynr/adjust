@@ -13,22 +13,16 @@ module CmdOptions (
 
 ) where
 
-import Control.Monad          (forM, when)
-import Data.Char              (ord)
-import Data.Vector            (Vector)
-import Data.Word              (Word8)
-import System.Console.CmdArgs ( Data, Typeable, (&=), args, argPos, cmdArgs, def
+import Control.Monad          (when)
+import System.Console.CmdArgs ( Data, Typeable, (&=), args, cmdArgs, def
                               , explicit, help, helpArg, isLoud, name, opt, program
-                              , summary, typ, typFile, verbosity, versionArg
+                              , summary, typ, verbosity, versionArg
                               )
 import System.Environment     (getArgs, withArgs)
 import System.Exit            (ExitCode(ExitFailure), exitWith)
 import System.IO              (hPutStrLn, stderr)
 
-
-import qualified Data.Vector as V
-
-import Info 
+import Info                   (_DESC, _EXEC, _INFO)
 
 -- | Cmd-line options.
 --
@@ -50,6 +44,10 @@ data Options = Options {
   , noHeader :: Bool
     -- Remove rows above the given alpha threshold
   , remove :: Bool
+    -- Read from stdin instead of a file
+  , stdIn :: Bool
+    -- Write to stdout instead of a file
+  , stdOut :: Bool
     -- Input and output arguments
   , argList :: [FilePath]
 
@@ -81,8 +79,11 @@ txtNoHeader = "Input data file doesn't contain a header row (currently disable)"
 txtRemove :: String
 txtRemove = "Remove rows above the given alpha threshold (useful for large datasets)"
 
-txtList :: String
-txtList = "Input and output files" 
+txtStdin :: String
+txtStdin = "Read from stdin instead of a file"
+
+txtStdout :: String
+txtStdout = "Write to stdout instead of a file"
 
 -- | Fills in info about the program's options.
 --
@@ -99,7 +100,9 @@ options = Options {
   , column     = def &= explicit &= name "c" &= name "column" &= help txtColumn
   , delim      = def &= explicit &= name "d" &= name "delim" &= help txtDelim
   , noHeader   = def &= explicit &= name "no-header" &= help txtNoHeader
-  , remove     = False &= explicit &= name "r" &= name "remove" &= help txtNoHeader
+  , remove     = False &= explicit &= name "r" &= name "remove" &= help txtRemove
+  , stdIn      = False &= explicit &= name "i" &= name "stdin" &= help txtStdin
+  , stdOut     = False &= explicit &= name "o" &= name "stdout" &= help txtStdout
   , argList    = def &= args &= typ "<input-file> <output-file>"
 }
 
@@ -121,12 +124,20 @@ checkOptions :: Options -> IO Options
 --
 checkOptions opts@Options{..}  = do
 
-    when (null argList) $
-        putStrLn "You must provide at least an input file" >>
+    when (null argList && not stdIn && not stdOut) $
+        putStrLn "ERROR: You must provide an input and output file" >>
+        exitWith (ExitFailure 1)
+
+    when (null argList && not stdIn && stdOut) $
+        putStrLn "ERROR: You must provide an input file" >>
+        exitWith (ExitFailure 1)
+
+    when (null argList && stdIn && not stdOut) $
+        putStrLn "ERROR: You must provide an output file" >>
         exitWith (ExitFailure 1)
 
     when (bonferroni && fdr) $
-        putStrLn "You can only use on of: --bonferroni, --fdr" >>
+        putStrLn "ERROR: You can only use on of: --bonferroni, --fdr" >>
         exitWith (ExitFailure 1)
 
     return opts { 

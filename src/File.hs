@@ -12,7 +12,9 @@ module File (
 
     findPColumn
   , readStatisticsFile
+  , readStatisticsFile'
   , writeStatisticsFile
+  , writeStatisticsFile'
 
 ) where
 
@@ -21,6 +23,7 @@ import Data.Char                      (ord, toLower)
 import Data.Csv
 import Data.Map.Strict                (Map)
 import Data.Word                      (Word8)
+import System.IO                      (Handle)
 
 import qualified Data.ByteString.Char8      as BS
 import qualified Data.ByteString.Lazy.Char8 as BL
@@ -57,7 +60,16 @@ parseFile delim = decodeWith (decodeDelimiter delim) NoHeader
 --
 readStatisticsFile :: Char -> FilePath -> IO (Either String DSVFile)
 --
-readStatisticsFile delim bs = separateHeader . parseFile delim <$> BL.readFile bs
+readStatisticsFile delim fp = separateHeader . parseFile delim <$> BL.readFile fp
+    where
+        separateHeader (Left s) = Left s
+        separateHeader (Right v) = Right $ (\(h, v) -> (V.head h, v)) $ V.splitAt 1 v
+
+-- | Same as readStatisticsFile but reads from stdin.
+--
+readStatisticsFile' :: Char -> Handle -> IO (Either String DSVFile)
+--
+readStatisticsFile' delim hand = separateHeader . parseFile delim <$> BL.hGetContents hand
     where
         separateHeader (Left s) = Left s
         separateHeader (Right v) = Right $ (\(h, v) -> (V.head h, v)) $ V.splitAt 1 v
@@ -82,3 +94,12 @@ writeStatisticsFile delim fp (h, rv) =
         -- | Merge the header and record vector into a single vector
         mergedRecs = V.cons h rv
 
+-- | Same as writeStatisticsFile but writes to stdout.
+--
+writeStatisticsFile' :: Char -> Handle -> DSVFile -> IO ()
+--
+writeStatisticsFile' delim hand (h, rv) = 
+    BL.hPutStr hand $ encodeWith (encodeDelimiter delim) $ V.toList mergedRecs
+    where
+        -- | Merge the header and record vector into a single vector
+        mergedRecs = V.cons h rv

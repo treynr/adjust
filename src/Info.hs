@@ -19,7 +19,7 @@ module Info (
 
 import Data.List          (intercalate)
 import Data.Time          (getCurrentTime, toGregorian, utctDay)
-import Development.GitRev (gitBranch, gitCommitCount, gitHash)
+import Development.GitRev (gitHash)
 import System.Environment (getArgs)
 
 _DESC :: String
@@ -30,7 +30,7 @@ _EXEC :: String
 _EXEC = "adjust"
 
 _HASH :: String
-_HASH = if $(gitHash) == "UNKNOWN" then "" else '-' : (take 8 $(gitHash))
+_HASH = if $(gitHash) == "UNKNOWN" then "" else '-' : take 8 $(gitHash)
 
 _INFO :: String
 _INFO = _EXEC ++ " v. " ++ _VERS ++ _HASH
