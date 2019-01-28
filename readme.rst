@@ -9,13 +9,14 @@ As the number of tests increases, so does the probability of encountering a type
 With as little as 20 tests, the chance of finding a significant result is ~64% although
 no tests may actually be significant [Goldman2008]_.
 :code:`adjust` can be used to correct for multiple testing by controlling the family-wise
-error rate (FWER) or the false discovery rate (FDR).
+error rate (FWER__) or the false discovery rate (FDR__).
 It is designed to be simple to use and relatively fast, e.g., controlling the FDR for a 
-set of GWAS__ results, 13,549,588 tests (1.4GB), takes about a minute and a half 
-(Xeon E5-2640 @ 2.50GHz).
+set of GWAS__ results--13,549,588 tests (1.4GB)--takes about a minute and a half 
+(on a Xeon E5-2640 @ 2.50GHz, running on a single thread).
 
 .. __: https://en.wikipedia.org/wiki/Multiple_comparisons_problem
-.. [Goldman2008] https://www.stat.berkeley.edu/~mgoldman/Section0402.pdf
+.. __: https://en.wikipedia.org/wiki/Family-wise_error_rate
+.. __: https://en.wikipedia.org/wiki/False_discovery_rate
 .. __: https://en.wikipedia.org/wiki/Genome-wide_association_study
 
 
@@ -106,4 +107,7 @@ Requirements
 - Stack__
 
 .. __: https://docs.haskellstack.org/en/stable/install_and_upgrade/
+
+
+.. [Goldman2008] https://www.stat.berkeley.edu/~mgoldman/Section0402.pdf
 
