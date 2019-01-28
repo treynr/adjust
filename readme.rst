@@ -30,14 +30,19 @@ Usage
 :code:`adjust` operates over delimiter separated value (DSV) files.
 If the file has a header, :code:`adjust` will attempt to infer which column contains the
 p-value.
-For example, the following command can be used to control the FDR at alpha < 0.05 and
-remove all rows in the input file that don't meet this criteria:
+For example, the following command can be used to control the FDR at alpha < 0.05 using
+the `Benjamini-Hochberg step-up procedure`__.
+All rows that don't meet this criteria are removed:
+
+.. __: https://en.wikipedia.org/wiki/False_discovery_rate#Benjamini%E2%80%93Hochberg_procedure
 
 .. code:: bash
 
     $ adjust input-stats.tsv output-stats.tsv
 
-Or, if you'd rather use the Bonferroni correction to control the FWER:
+Or, if you'd rather use the `Bonferroni correction`__ to control the FWER:
+
+.. __: https://en.wikipedia.org/wiki/Bonferroni_correction
 
 .. code:: bash
 
@@ -108,6 +113,9 @@ Requirements
 
 .. __: https://docs.haskellstack.org/en/stable/install_and_upgrade/
 
+
+Refs
+----
 
 .. [Goldman2008] https://www.stat.berkeley.edu/~mgoldman/Section0402.pdf
 
