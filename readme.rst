@@ -102,7 +102,7 @@ If you wish to install it to your :code:`$PATH`:
 
 .. code:: bash
 
-    $ stack build --only-dependencies
+    $ stack build --copy-bins
 
 
 Requirements
