@@ -5,7 +5,7 @@
 -- hash: ebdddc693999ea07fd054149773f628b1631e31bb5b86e7a23ecf90dc0ce4fe6
 
 name:           adjust
-version:        0.1.0
+version:        1.0.0
 description:    Correct for multiple testing by controlling the FDR and FWER.
 author:         TR
 copyright:      2018 TR

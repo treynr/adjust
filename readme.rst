@@ -70,10 +70,10 @@ Options
 - :code:`-d, --delim=CHAR`: Specify a delimiter to use when parsing the input and writing
   output.
 
-- :code:`-c, --column=INT`: Zero-indexed column containing the p-value (currently disabled)
+- :code:`-c, --column=INT`: Zero-indexed column containing the p-value (*currently disabled*)
 
 - :code:`-n, --no-header`: Specify that the input does not contain a header file
-  (currently disabled)
+  (*currently disabled*)
 
 - :code:`-r, --remove`: Remove rows above the given alpha threshold. This is only
   relevant when producing adjusted p-values using the :code:`--adjust` option.
