@@ -2,6 +2,9 @@
 adjust
 ======
 
+.. image:: https://img.shields.io/circleci/project/github/treynr/adjust/master.svg?style=flat-square
+    :target: https://circleci.com/gh/treynr/adjust
+
 In statistics, the `multiple testing problem`__ occurs when testing multiple hypotheses
 simultaneously.
 As the number of tests increases, so does the probability of encountering a type I error

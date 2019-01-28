@@ -14,7 +14,7 @@ module Main where
 import System.IO     (IOMode(ReadMode, WriteMode), stdin, stdout, withFile)
 
 import CmdOptions    (Options(..), handleCmdLineArgs)
-import Fdr           (adjustFDR, controlFDR, adjustFWER, controlFWER)
+import Correction    (adjustFDR, controlFDR, adjustFWER, controlFWER)
 import File.Internal (DSVFile)
 import File          ( findPColumn, readStatisticsFile, readStatisticsFile'
                      , writeStatisticsFile'

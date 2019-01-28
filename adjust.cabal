@@ -40,7 +40,7 @@ library
     , vector-algorithms
   exposed-modules:
       CmdOptions
-    , Fdr
+    , Correction
     , File
     , File.Internal
     , Info
@@ -73,7 +73,7 @@ test-suite test
   main-is: MainTest.hs
   other-modules: 
       TestFile
-    , TestFdr
+    , TestCorrection
   hs-source-dirs:
       test
   ghc-options:
